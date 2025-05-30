@@ -9,18 +9,26 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
-
+    
     @Autowired
     private UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody User user) {
-        return ResponseEntity.ok(userService.registerUser(user));
+    public ResponseEntity<?> registerUser(@RequestBody User user) {
+        try {
+            User savedUser = userService.registerUser(user);
+            // Don't return password in response
+            savedUser.setPassword(null);
+            return ResponseEntity.ok(savedUser);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Registration failed: " + e.getMessage());
+        }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody User user) {
-        // Placeholder login logic, should use real JWT validation
-        return ResponseEntity.ok("Login successful (JWT not implemented here)");
+    // Remove the /login endpoint - it's handled by JwtAuthenticationFilter
+    
+    @GetMapping("/test")
+    public ResponseEntity<String> test() {
+        return ResponseEntity.ok("Auth controller is working");
     }
 }

@@ -39,6 +39,5 @@ public class Category {
 		this.issues = issues;
 	}
 
-    // Getters & Setters
     
 }
